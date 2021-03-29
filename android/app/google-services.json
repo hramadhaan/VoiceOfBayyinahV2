@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "147163713047",
+    "firebase_url": "https://vob-moapps-default-rtdb.firebaseio.com",
+    "project_id": "vob-moapps",
+    "storage_bucket": "vob-moapps.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:147163713047:android:f8d6227c2e2b9984e5d652",
+        "android_client_info": {
+          "package_name": "com.voiceofbayyinah.apps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "147163713047-1v90ecoluapeuju7bjar77tnshf4m6i2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.voiceofbayyinah.apps",
+            "certificate_hash": "0000000000000000000000000000000000000000"
+          }
+        },
+        {
+          "client_id": "147163713047-acd8j74gcsojvt0ta70ho3mr7vlrp144.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.voiceofbayyinah.apps",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "147163713047-r98ea3ea3vf87phidmo0riut6o58nq2m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.voiceofbayyinah.apps",
+            "certificate_hash": "aaae3fbb0e228db73eb1c4e4bb2025ab2308698e"
+          }
+        },
+        {
+          "client_id": "147163713047-bd521r7qrf1nkedp0eisdpht7bmbsi7g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5IHGUib6XLYTtVE6fPsEieHVDpeSpjbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147163713047-bd521r7qrf1nkedp0eisdpht7bmbsi7g.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "147163713047-78v6c8t835759e6m5cglbockpk2n4t3v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.voiceofbayyinah.apps"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
