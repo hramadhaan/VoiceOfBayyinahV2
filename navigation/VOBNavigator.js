@@ -1,16 +1,17 @@
 import React from 'react';
-import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createSharedElementStackNavigator } from 'react-navigation-shared-element';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import HomeScreen from '../screens/Home/HomeScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
 import SplashScreen from '../screens/SplashScreen';
 import NewPostScreen from '../screens/Home/NewPostScreen';
 import CustomBottomTabBar from '../components/CustomBottomTabBar';
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import DetailArtikelScreen from '../screens/DetailArtikelScreen';
 import CommentScreen from '../screens/CommentScreen';
 import SubCommentScreen from '../screens/SubCommentScreen';
+import FavoriteScreen from '../screens/FavoriteScreen';
 
 const FirstStack = createSharedElementStackNavigator();
 
@@ -31,8 +32,9 @@ export const HomeTabNavigator = () => {
       <HomeTab.Screen
         name="NewPostTab"
         component={NewPostScreen}
-        options={{title: 'New Post'}}
+        options={{ title: 'New Post' }}
       />
+      <HomeTab.Screen name='FavoriteTab' component={FavoriteScreen} options={{ title: 'Favorite' }} />
     </HomeTab.Navigator>
   );
 };

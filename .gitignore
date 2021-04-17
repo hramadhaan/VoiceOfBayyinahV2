@@ -21,6 +21,9 @@ DerivedData
 *.ipa
 *.xcuserstate
 
+# IOS
+ios/Podfile.lock
+
 # Android/IntelliJ
 #
 build/
@@ -28,6 +31,7 @@ build/
 .gradle
 local.properties
 *.iml
+android/app/src/main/
 
 # node.js
 #

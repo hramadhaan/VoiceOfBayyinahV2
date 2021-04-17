@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
@@ -8,7 +8,7 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LottieView from 'lottie-react-native';
 
 import CommentItem from '../components/CommentItem';
@@ -17,8 +17,8 @@ import InputSubComment from '../components/InputSubComment';
 import * as actionComment from '../store/actions/comment';
 
 const SubCommentScreen = (props) => {
-  const {route} = props;
-  const {id} = route.params;
+  const { route } = props;
+  const { id } = route.params;
 
   const dispatch = useDispatch();
 
@@ -27,28 +27,33 @@ const SubCommentScreen = (props) => {
 
   const auth = useSelector((state) => state.auth);
 
+  const flatlistRef = useRef()
+
   useEffect(() => {
     dispatch(actionComment.fetchSubComment(id));
   }, [dispatch]);
 
   let render = (
     <FlatList
+      ref={flatlistRef}
       data={comment.subComments}
       // initialNumToRender={comment.subComments.length}
+      onContentSizeChange={() => flatlistRef.current.scrollToEnd()} // scroll it
+      // initialScrollIndex={comment.subComments.length - 1}
       showsVerticalScrollIndicator={false}
       removeClippedSubviews
       keyExtractor={(item, index) => `index-subcomment-${index}`}
       ItemSeparatorComponent={() => {
-        return <View style={{height: 12}} />;
+        return <View style={{ height: 12 }} />;
       }}
       ListEmptyComponent={() => {
         return (
-          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ alignItems: 'center', justifyContent: 'center' }}>
             <LottieView
               source={require('../components/Lottie/empty.json')}
               autoPlay
               loop
-              style={{height: 120}}
+              style={{ height: 120 }}
             />
             <Text
               style={{
@@ -65,7 +70,7 @@ const SubCommentScreen = (props) => {
         marginLeft: 20,
         marginVertical: 8,
       }}
-      renderItem={({item, index}) => {
+      renderItem={({ item, index }) => {
         return (
           <CommentItem
             showLike={false}
@@ -82,7 +87,7 @@ const SubCommentScreen = (props) => {
 
   if (comment.loading) {
     render = (
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
           style={{
             height: 90,
@@ -116,12 +121,12 @@ const SubCommentScreen = (props) => {
           time={commentDetail.time}
           navigation={props.navigation}
         />
-        <View style={{height: 12}} />
+        <View style={{ height: 12 }} />
         {render}
       </View>
       <KeyboardAvoidingView
         behavior="position"
-        style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
+        style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <InputSubComment imageUri={auth.image} id={id} />
       </KeyboardAvoidingView>
     </View>

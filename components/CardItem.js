@@ -20,7 +20,7 @@ const CardItem = ({item, navigation}) => {
     state.user.users.find((user) => user.id === item.idPenulis),
   );
 
-  const [showShimmer, setShowShimmer] = useState(false);
+  const [showShimmer, setShowShimmer] = useState(true);
 
   const openDetail = (id, currentView) => {
     dispatch(artikelAction.increaseViewArtikel(id, currentView));
@@ -49,12 +49,12 @@ const CardItem = ({item, navigation}) => {
         });
       }}>
       <Layout>
-        <ShimmerPlaceholder
+        {/* <ShimmerPlaceholder
           style={{borderTopLeftRadius: 12, borderTopRightRadius: 12}}
           LinearGradient={LinearGradient}
           visible={showShimmer}
           width={Dimensions.get('screen').width - 12}
-          height={99.83}>
+          height={99.83}> */}
           <Image
             source={{uri: item.imageUrl}}
             style={{
@@ -63,9 +63,9 @@ const CardItem = ({item, navigation}) => {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             }}
-            onLoadEnd={() => setShowShimmer(true)}
+            // onLoadEnd={() => setShowShimmer(true)}
           />
-        </ShimmerPlaceholder>
+        {/* </ShimmerPlaceholder> */}
         <Layout
           style={{
             padding: 12,

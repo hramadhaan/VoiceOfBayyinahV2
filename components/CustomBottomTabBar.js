@@ -13,7 +13,11 @@ const NewPostIcon = (props) => {
   return <Icon {...props} name="book" />;
 };
 
-const CustomBottomTabBar = ({navigation, state}) => {
+const FavoriteIcon = props => {
+  return <Icon {...props} name='bookmark' />
+}
+
+const CustomBottomTabBar = ({ navigation, state }) => {
   return (
     <React.Fragment>
       <BottomNavigation
@@ -22,6 +26,7 @@ const CustomBottomTabBar = ({navigation, state}) => {
         onSelect={(index) => navigation.navigate(state.routeNames[index])}>
         <BottomNavigationTab title="Beranda" icon={HomeIcon} />
         <BottomNavigationTab title="New Post" icon={NewPostIcon} />
+        <BottomNavigationTab title='Favorite' icon={FavoriteIcon} />
       </BottomNavigation>
     </React.Fragment>
   );

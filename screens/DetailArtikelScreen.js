@@ -63,7 +63,7 @@ const DetailArtikelScreen = (props) => {
           textColor: 'yellow',
           onPress: () => {
             // KE FAVORITE
-            props.navigation.navigate('NewPostTab');
+            props.navigation.navigate('FavoriteTab');
           },
         },
       });
@@ -419,6 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 14,
     paddingVertical: 10,
+    marginTop: 20
   },
 });
 
