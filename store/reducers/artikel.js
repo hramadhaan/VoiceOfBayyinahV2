@@ -13,12 +13,19 @@ import {
   ARTIKEL_ISBOOKMARK,
   ARTIKEL_FETCH_BOOKMARK,
   ARTIKEL_ISUNBOOKMARK,
+  ARTIKEL_CATEGORY_FETCH,
+  ARTIKEL_SORT_FULL_POPULAR,
+  ARTIKEL_SORT_SEARCH,
+  ARTIKEL_SORT_FULL_POPULAR_INIT
 } from '../actions/artikel';
 
 const initialState = {
   artikels: [],
   sortArtikels: [],
+  searchArtikel: [],
+  sortPopular: [],
   likeArtikel: [],
+  sortCategory: [],
   artikelData: {},
   bookmarkArtikel: [],
   loading: false,
@@ -46,6 +53,35 @@ export default (state = initialState, action) => {
         sortArtikels: action.payload,
         loading: false,
       };
+    case ARTIKEL_CATEGORY_FETCH:
+      return {
+        ...state,
+        sortCategory: action.payload,
+        loading: false
+      }
+    case ARTIKEL_SORT_FULL_POPULAR:
+      return {
+        ...state,
+        sortPopular: action.payload,
+        loading: false
+      }
+    case ARTIKEL_SORT_FULL_POPULAR_INIT:
+      return {
+        ...state,
+        searchArtikel: []
+      }
+    case ARTIKEL_SORT_SEARCH:
+      return {
+        ...state,
+        searchArtikel: action.payload,
+        loading: false
+      }
+    case ARTIKEL_FETCH:
+      return {
+        ...state,
+        artikels: action.payload,
+        loading: false
+      }
     case ARTIKEL_INCREASE_VIEW:
       const artikelIndex = state.sortArtikels.findIndex(
         (artikel) => artikel.id === action.id,

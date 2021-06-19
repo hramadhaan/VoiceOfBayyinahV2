@@ -12,6 +12,10 @@ import DetailArtikelScreen from '../screens/DetailArtikelScreen';
 import CommentScreen from '../screens/CommentScreen';
 import SubCommentScreen from '../screens/SubCommentScreen';
 import FavoriteScreen from '../screens/FavoriteScreen';
+import CategoryArticleScreen from '../screens/CategoryArticleScreen';
+import PopulerArticleScreen from '../screens/PopulerArticleScreen';
+import SearchScreen from '../screens/SearchScreen';
+import SettingScreen from '../screens/SettingScreen';
 
 const FirstStack = createSharedElementStackNavigator();
 
@@ -48,6 +52,10 @@ export const RootNavigator = () => {
       <RootStack.Screen name="Detail" component={DetailArtikelScreen} />
       <RootStack.Screen name="Comment" component={CommentScreen} />
       <RootStack.Screen name="SubComment" component={SubCommentScreen} />
+      <RootStack.Screen name='CategoryArticle' component={CategoryArticleScreen} />
+      <RootStack.Screen name='PopulerArticle' component={PopulerArticleScreen} />
+      <RootStack.Screen name='Search' component={SearchScreen} />
+      <RootStack.Screen name='Setting' component={SettingScreen} />
     </RootStack.Navigator>
   );
 };

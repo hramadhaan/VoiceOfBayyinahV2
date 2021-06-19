@@ -10,7 +10,6 @@ const CommentItem = ({
   photoURI,
   comment,
   time,
-  navigation,
   press,
   showLike,
 }) => {
@@ -77,11 +76,6 @@ const CommentItem = ({
           </View>
         </View>
       </View>
-      {showLike && (
-        <View>
-          <Ionicons name="heart-outline" size={22} />
-        </View>
-      )}
     </View>
   );
 };

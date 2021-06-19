@@ -1,12 +1,12 @@
 import React from 'react';
-import {FlatList, Image, StyleSheet, Dimensions} from 'react-native';
-import {Card, Layout, Text} from '@ui-kitten/components';
+import { FlatList, Image, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
+import { Card, Layout, Text } from '@ui-kitten/components';
 
 import PopularItem from './PopularItem';
 
-const PopularComponent = ({sortData, navigation}) => {
+const PopularComponent = ({ sortData, navigation }) => {
   return (
-    <Layout style={{marginHorizontal: 12, marginBottom: 20}}>
+    <Layout style={{ marginHorizontal: 12, marginBottom: 20 }}>
       <Layout
         style={{
           flexDirection: 'row',
@@ -22,14 +22,21 @@ const PopularComponent = ({sortData, navigation}) => {
           }}>
           Populer
         </Text>
-        <Text
-          style={{
-            fontSize: 10,
-            fontFamily: 'Poppins-Regular',
-            alignItems: 'center',
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('PopulerArticle', {
+              title:'Populer',
+            })
           }}>
-          See All
+          <Text
+            style={{
+              fontSize: 10,
+              fontFamily: 'Poppins-Regular',
+              alignItems: 'center',
+            }}>
+            See All
         </Text>
+        </TouchableOpacity>
       </Layout>
       <FlatList
         nestedScrollEnabled
@@ -40,10 +47,10 @@ const PopularComponent = ({sortData, navigation}) => {
         decelerationRate={0.6}
         snapToAlignment="center"
         ItemSeparatorComponent={() => {
-          return <Layout style={{margin: 8}} />;
+          return <Layout style={{ margin: 8 }} />;
         }}
         keyExtractor={(item, index) => `popular-item-${item.id}`}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return <PopularItem item={item} navigation={navigation} />;
         }}
       />

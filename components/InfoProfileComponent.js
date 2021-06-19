@@ -1,9 +1,9 @@
 import React from 'react';
-import {Dimensions, Image} from 'react-native';
-import {Layout, Text} from '@ui-kitten/components';
+import { Dimensions, Image, TouchableOpacity } from 'react-native';
+import { Layout, Text } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/Feather';
 
-const InfoProfileComponent = ({photoAuth, nameAuth}) => {
+const InfoProfileComponent = ({ photoAuth, nameAuth, navigation }) => {
   return (
     <Layout
       style={{
@@ -12,13 +12,13 @@ const InfoProfileComponent = ({photoAuth, nameAuth}) => {
         justifyContent: 'space-between',
         marginHorizontal: 12,
       }}>
-      <Layout style={{flexDirection: 'row'}}>
+      <Layout style={{ flexDirection: 'row' }}>
         <Image
-          style={{width: 45, height: 45, borderRadius: 45 / 2}}
-          source={{uri: photoAuth}}
+          style={{ width: 45, height: 45, borderRadius: 45 / 2 }}
+          source={{ uri: photoAuth }}
         />
-        <Layout style={{flexDirection: 'column', marginLeft: 8}}>
-          <Text style={{fontSize: 12, fontFamily: 'Poppins-Regular'}}>
+        <Layout style={{ flexDirection: 'column', marginLeft: 8 }}>
+          <Text style={{ fontSize: 12, fontFamily: 'Poppins-Regular' }}>
             Assalamu'alaikum,
           </Text>
           <Text
@@ -30,7 +30,9 @@ const InfoProfileComponent = ({photoAuth, nameAuth}) => {
           </Text>
         </Layout>
       </Layout>
-      <Icon name="settings" size={16} color="black" />
+      <TouchableOpacity onPress={() => navigation.navigate('Setting')}>
+        <Icon name="settings" size={16} color="black" />
+      </TouchableOpacity>
     </Layout>
   );
 };

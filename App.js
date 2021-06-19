@@ -50,6 +50,7 @@ const App = (props) => {
           {...eva}
           theme={{...eva.light, ...theme}}
           customMapping={mapping}>
+            <StatusBar barStyle='dark-content' />
           <AppNavigation />
         </ApplicationProvider>
       </Provider>

@@ -6,6 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import CardItem from '../components/CardItem'
 import * as artikelAction from '../store/actions/artikel'
+import HeaderComponent from '../components/HeaderComponent'
 
 const FavoriteScreen = props => {
     const artikel = useSelector(state => state.artikel)
@@ -60,11 +61,12 @@ const FavoriteScreen = props => {
 
     return (
         <View style={{
-            paddingTop: Math.round(insets.top, 18),
             flex: 1,
             backgroundColor: '#fff',
-            paddingHorizontal: 12
-        }}>{render}</View>
+        }}>
+            <HeaderComponent title='Favorite' />
+            {render}
+        </View>
     )
 }
 

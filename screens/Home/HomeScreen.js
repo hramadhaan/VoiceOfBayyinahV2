@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useMemo, useState} from 'react';
+import React, { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import {
   View,
   Dimensions,
@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   RefreshControl,
 } from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useDispatch, useSelector} from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Feather';
 import LottieView from 'lottie-react-native';
 import messaging from '@react-native-firebase/messaging';
 
 import * as authAction from '../../store/actions/auth';
-import {Layout, Text} from '@ui-kitten/components';
+import { Layout, Text } from '@ui-kitten/components';
 import InfoProfileComponent from '../../components/InfoProfileComponent';
 import SearchHomeComponent from '../../components/SearchHomeComponent';
 import TreeCategoryComponent from '../../components/TreeCategory';
@@ -67,7 +67,7 @@ const HomeScreen = (props) => {
   useEffect(() => {
     dispatch(categoryAction.fetchCategory());
     dispatch(bannerAction.fetchBanner());
-    dispatch(artikelAction.artikelSortPopular());
+    dispatch(artikelAction.artikelSortPopular(5));
     dispatch(userAction.fetchUsers());
   }, [dispatch]);
 
@@ -89,7 +89,7 @@ const HomeScreen = (props) => {
     try {
       dispatch(categoryAction.fetchCategory());
       dispatch(bannerAction.fetchBanner());
-      dispatch(artikelAction.artikelSortPopular());
+      dispatch(artikelAction.artikelSortPopular(5));
       dispatch(userAction.fetchUsers());
     } catch (err) {
       console.log(err);
@@ -111,13 +111,13 @@ const HomeScreen = (props) => {
         flex: 1,
         backgroundColor: 'white',
       }}>
-      <Layout style={{flex: 1}}>
-        <InfoProfileComponent nameAuth={nameAuth} photoAuth={photoAuth} />
-        <SearchHomeComponent />
+      <Layout style={{ flex: 1 }}>
+        <InfoProfileComponent nameAuth={nameAuth} photoAuth={photoAuth} navigation={props.navigation} />
+        <SearchHomeComponent navigation={props.navigation} />
         {!banner.loading ? (
           <CarouselHome banner={banner.banners} />
         ) : (
-          <View style={{width: Dimensions.get('screen').width, height: 98}}>
+          <View style={{ width: Dimensions.get('screen').width, height: 98 }}>
             <LottieView
               source={require('../../components/Lottie/loading.json')}
               autoPlay
@@ -126,7 +126,7 @@ const HomeScreen = (props) => {
           </View>
         )}
         {category.loading ? (
-          <View style={{width: Dimensions.get('screen').width, height: 98}}>
+          <View style={{ width: Dimensions.get('screen').width, height: 98 }}>
             <LottieView
               source={require('../../components/Lottie/loading.json')}
               autoPlay
@@ -135,6 +135,7 @@ const HomeScreen = (props) => {
           </View>
         ) : (
           <TreeCategoryComponent
+            navigation={props.navigation}
             category={category.categories}
             pressLainnya={() => {
               handleSnapPress(2);
@@ -142,7 +143,7 @@ const HomeScreen = (props) => {
           />
         )}
         {artikel.loading || user.loading ? (
-          <View style={{width: Dimensions.get('screen').width, height: 98}}>
+          <View style={{ width: Dimensions.get('screen').width, height: 98 }}>
             <LottieView
               source={require('../../components/Lottie/loading.json')}
               autoPlay
@@ -169,16 +170,21 @@ const HomeScreen = (props) => {
                 padding: 12,
               }}
               ItemSeparatorComponent={() => {
-                return <Layout style={{marginVertical: 12}} />;
+                return <Layout style={{ marginVertical: 12 }} />;
               }}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 return (
-                  <TouchableOpacity>
+                  <TouchableOpacity onPress={() => {
+                    props.navigation.navigate('CategoryArticle', {
+                      title: item.name,
+                      id: item.id
+                    })
+                  }}>
                     <Layout
-                      style={{flexDirection: 'row', alignItems: 'center'}}>
+                      style={{ flexDirection: 'row', alignItems: 'center' }}>
                       <Image
-                        source={{uri: item.image}}
-                        style={{width: 39, height: 39, marginRight: 8}}
+                        source={{ uri: item.image }}
+                        style={{ width: 39, height: 39, marginRight: 8 }}
                       />
                       <Text>{item.name}</Text>
                     </Layout>

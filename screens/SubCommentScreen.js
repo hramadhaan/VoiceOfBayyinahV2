@@ -112,7 +112,7 @@ const SubCommentScreen = (props) => {
           paddingHorizontal: 12,
           paddingVertical: 8,
           flex: 1,
-          paddingBottom: 100,
+          marginBottom: 70,
         }}>
         <CommentItem
           photoURI={commentDetail.imageSender}

@@ -4,10 +4,11 @@ import {Dimensions, TouchableOpacity} from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 const SearchHomeComponent = (props) => {
+  const {navigation} = props
   const {width} = Dimensions.get('screen');
   return (
     <TouchableOpacity
-      onPress={() => alert('Hello')}
+      onPress={() => navigation.navigate('Search')}
       style={{marginTop: 14, paddingHorizontal: 12}}>
       <Layout
         style={{

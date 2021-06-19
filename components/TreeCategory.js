@@ -4,7 +4,7 @@ import {FlatList, Image, TouchableOpacity, View} from 'react-native';
 
 import TreeItem from './TreeItem';
 
-const TreeCategoryComponent = ({category, pressLainnya}) => {
+const TreeCategoryComponent = ({category, pressLainnya, navigation}) => {
   return (
     <Layout style={{marginVertical: 8, marginHorizontal: 12}}>
       <Text
@@ -41,6 +41,7 @@ const TreeCategoryComponent = ({category, pressLainnya}) => {
               id={item.id}
               text={item.name}
               lainnya={pressLainnya}
+              navigation={navigation}
             />
           );
         }}

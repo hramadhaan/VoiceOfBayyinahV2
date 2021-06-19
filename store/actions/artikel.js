@@ -7,6 +7,9 @@ export const ARTIKEL_START = 'ARTIKEL_START';
 export const ARTIKEL_ERROR = 'ARTIKEL_ERROR';
 export const ARTIKEL_FETCH = 'ARTIKEL_FETCH';
 export const ARTIKEL_SORT_POPULAR = 'ARTIKEL_SORT_POPULAR';
+export const ARTIKEL_SORT_FULL_POPULAR = 'ARTIKEL_SORT_FULL_POPULAR'
+export const ARTIKEL_SORT_FULL_POPULAR_INIT = 'ARTIKEL_SORT_FULL_POPULAR_INIT'
+export const ARTIKEL_SORT_SEARCH = 'ARTIKEL_SORT_SEARCH'
 export const ARTIKEL_INCREASE_VIEW = 'ARTIKEL_INCREASE_VIEW';
 export const ARTIKEL_DETAIL = 'ARTIKEL_DETAIL';
 // LIKE ARTIKEL
@@ -17,8 +20,10 @@ export const ARTIKEL_FETCH_LIKE = 'ARTIKEL_FETCH_LIKE';
 export const ARTIKEL_ISBOOKMARK = 'ARITKEL_ISBOOKMARK';
 export const ARTIKEL_ISUNBOOKMARK = 'ARTIKEL_ISUNBOOKMARK';
 export const ARTIKEL_FETCH_BOOKMARK = 'ARTIKEL_FETCH_BOOKMARK';
+// ARTICLE SORT BY CATEGORY
+export const ARTIKEL_CATEGORY_FETCH = 'ARTIKEL_CATEGORY_FETCH'
 
-export const artikelSortPopular = () => {
+export const artikelSortPopular = (count) => {
   return async (dispatch) => {
     dispatch({
       type: ARTIKEL_START,
@@ -26,7 +31,7 @@ export const artikelSortPopular = () => {
     database()
       .ref('Article/')
       .orderByChild('countView')
-      .limitToLast(5)
+      .limitToLast(count)
       .once('value')
       .then((snapshot) => {
         const loadedArticle = [];
@@ -62,6 +67,44 @@ export const artikelSortPopular = () => {
       });
   };
 };
+
+export const artikelSortFullPopuler = () => {
+  return async dispatch => {
+    dispatch({
+      type: ARTIKEL_START
+    })
+    database().ref('Article')
+      .orderByChild('countView').limitToLast(10)
+      .once('value')
+      .then(snapshot => {
+        const loadedArticle = []
+        snapshot.forEach((childSnapshot, index) => {
+          const key = childSnapshot.key
+          const data = childSnapshot.val()
+          loadedArticle.push(
+            new Article(
+              key,
+              data.imageUrl,
+              data.judul,
+              data.hashtag,
+              data.idCategory,
+              data.partOne,
+              data.partTwo,
+              data.partThree,
+              data.time,
+              data.idPenulis,
+              data.countView,
+            ),
+          );
+        })
+        dispatch({
+          type: ARTIKEL_SORT_FULL_POPULAR,
+          payload: loadedArticle.reverse()
+        })
+      })
+      .catch(err => dispatch({ type: ARTIKEL_ERROR, error: err }))
+  }
+}
 
 export const increaseViewArtikel = (id) => {
   return async (dispatch) => {
@@ -295,7 +338,7 @@ export const fetchLikeArtikel = (idArtikel) => {
           payload: loadedUser,
         });
       })
-      .catch((err) => dispatch({type: ARTIKEL_ERROR, error: err}));
+      .catch((err) => dispatch({ type: ARTIKEL_ERROR, error: err }));
   };
 };
 
@@ -345,3 +388,122 @@ export const fetchBookmark = () => {
       );
   };
 };
+
+export const artikelSortCategoryInit = () => {
+  return dispatch => {
+    dispatch({
+      type: ARTIKEL_SORT_FULL_POPULAR_INIT
+    })
+  }
+}
+
+export const artikelSortCategory = (id) => {
+  return async dispatch => {
+    dispatch({
+      type: ARTIKEL_START
+    })
+
+    database().ref('Article').orderByChild('idCategory').equalTo(id).once('value').then((snapshot) => {
+      const loadedArticle = []
+      snapshot.forEach((childSnapshot, index) => {
+        const key = childSnapshot.key
+        const data = childSnapshot.val()
+        loadedArticle.push(
+          new Article(
+            key,
+            data.imageUrl,
+            data.judul,
+            data.hashtag,
+            data.idCategory,
+            data.partOne,
+            data.partTwo,
+            data.partThree,
+            data.time,
+            data.idPenulis,
+            data.countView,
+          )
+        )
+      })
+      console.log('Data Category: ', loadedArticle)
+      dispatch({
+        type: ARTIKEL_CATEGORY_FETCH,
+        payload: loadedArticle
+      })
+    }).catch(err => dispatch({ type: ARTIKEL_ERROR, error: err }))
+  }
+}
+
+export const articleFetch = () => {
+  return async dispatch => {
+    dispatch({
+      type: ARTIKEL_START
+    })
+
+    database().ref('Article').once('value').then(snapshot => {
+      const loadedArticle = []
+      snapshot.forEach((childSnapshot, index) => {
+        const key = childSnapshot.key
+        const data = childSnapshot.val()
+        loadedArticle.push(
+          new Article(
+            key,
+            data.imageUrl,
+            data.judul,
+            data.hashtag,
+            data.idCategory,
+            data.partOne,
+            data.partTwo,
+            data.partThree,
+            data.time,
+            data.idPenulis,
+            data.countView,
+          )
+        )
+      })
+      dispatch({
+        type: ARTIKEL_FETCH,
+        payload: loadedArticle
+      })
+    }).catch(err => dispatch({ type: ARTIKEL_ERROR, error: err }))
+  }
+}
+
+export const searchArticle = (searchText) => {
+  return async dispatch => {
+    dispatch({
+      type: ARTIKEL_START,
+    })
+    database().ref('Article')
+      .orderByChild('judul')
+      .startAt(searchText)
+      .endAt(searchText + '\uf8ff')
+      .once('value')
+      .then(snapshot => {
+        const loadedArticle = []
+        snapshot.forEach((childSnapshot, index) => {
+          const key = childSnapshot.key
+          const data = childSnapshot.val()
+          loadedArticle.push(
+            new Article(
+              key,
+              data.imageUrl,
+              data.judul,
+              data.hashtag,
+              data.idCategory,
+              data.partOne,
+              data.partTwo,
+              data.partThree,
+              data.time,
+              data.idPenulis,
+              data.countView,
+            )
+          )
+        })
+        dispatch({
+          type: ARTIKEL_SORT_SEARCH,
+          payload: loadedArticle
+        })
+      })
+      .catch(err => dispatch({ type: ARTIKEL_ERROR, error: err }))
+  }
+}
