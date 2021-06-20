@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react';
+import React, { useEffect, useState, useRef, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,35 +9,49 @@ import {
   Animated,
   TouchableOpacity,
   FlatList,
+  Alert,
+  Share,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LottieView from 'lottie-react-native';
 import Snackbar from 'react-native-snackbar';
+import RNHtmlPDF from 'react-native-html-to-pdf'
 import moment from 'moment';
 import 'moment/locale/id';
 moment().locale('id');
 
+import FileViewer from 'react-native-file-viewer'
+
 import * as artikelAction from '../store/actions/artikel';
 import Icon from 'react-native-vector-icons/Feather';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import FeatherIcons from 'react-native-vector-icons/Feather'
 import CardItem from '../components/CardItem';
 import LikeButtonComponent from '../components/LikeButtonComponent';
 import BookmarkButtonComponent from '../components/BookmarkButtonComponent';
+import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
+import Clipboard from '@react-native-clipboard/clipboard';
 
-const {width, height} = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 
 const DetailArtikelScreen = (props) => {
-  const {route} = props;
-  const {id} = route.params;
+  const { route } = props;
+  const { id } = route.params;
 
   const insets = useSafeAreaInsets();
 
+  const bottomSheet = useRef()
+  const snapPoints = useMemo(() => ['0%', '25%'], []);
+  const handleSnapPress = useCallback((index) => {
+    bottomSheet.current?.snapTo(index);
+  }, []);
+
   const dispatch = useDispatch();
   const artikel = useSelector((state) => state.artikel);
-  const {artikelData, likeArtikel, messages} = artikel;
+  const { artikelData, likeArtikel, messages } = artikel;
   const category = useSelector((state) =>
     state.category.categories.find((cat) => cat.id === artikelData.idCategory),
   );
@@ -101,7 +115,7 @@ const DetailArtikelScreen = (props) => {
               },
             },
           ],
-          {useNativeDriver: true},
+          { useNativeDriver: true },
         )}>
         <View>
           <ShimmerPlaceholder
@@ -111,8 +125,8 @@ const DetailArtikelScreen = (props) => {
             width={width}>
             <ImageBackground
               onLoadEnd={() => setShimmer(true)}
-              source={{uri: artikelData.imageUrl}}
-              style={{height: 150, width: width}}>
+              source={{ uri: artikelData.imageUrl }}
+              style={{ height: 150, width: width }}>
               {shimmer && (
                 <>
                   <View
@@ -123,7 +137,7 @@ const DetailArtikelScreen = (props) => {
                       backgroundColor: 'rgba(0,0,0,0.55)',
                     }}
                   />
-                  <View style={{paddingHorizontal: 14, paddingTop: 14}}>
+                  <View style={{ paddingHorizontal: 14, paddingTop: 14 }}>
                     <Icon
                       name="arrow-left"
                       size={20}
@@ -151,7 +165,7 @@ const DetailArtikelScreen = (props) => {
                       }}>
                       <Text
                         numberOfLines={1}
-                        style={{color: 'white', fontFamily: 'Poppins-Regular'}}>
+                        style={{ color: 'white', fontFamily: 'Poppins-Regular' }}>
                         {category.name}
                       </Text>
                     </View>
@@ -180,20 +194,20 @@ const DetailArtikelScreen = (props) => {
               borderTopLeftRadius: 25,
               borderTopRightRadius: 25,
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View style={{flexDirection: 'row'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View style={{ flexDirection: 'row' }}>
                 {penulis && (
                   <Image
-                    source={{uri: penulis.photoURL}}
-                    style={{width: 45, height: 45, borderRadius: 45 / 2}}
+                    source={{ uri: penulis.photoURL }}
+                    style={{ width: 45, height: 45, borderRadius: 45 / 2 }}
                   />
                 )}
                 {penulis && (
-                  <View style={{flexDirection: 'column', marginLeft: 8}}>
-                    <Text style={{fontSize: 14, fontFamily: 'Poppins-Bold'}}>
+                  <View style={{ flexDirection: 'column', marginLeft: 8 }}>
+                    <Text style={{ fontSize: 14, fontFamily: 'Poppins-Bold' }}>
                       {penulis.displayName}
                     </Text>
-                    <Text style={{fontFamily: 'Poppins-Regular'}}>
+                    <Text style={{ fontFamily: 'Poppins-Regular' }}>
                       {moment(artikelData.time, 'LLL').fromNow()}
                     </Text>
                   </View>
@@ -201,11 +215,11 @@ const DetailArtikelScreen = (props) => {
               </View>
             </View>
             {/* PART ONE */}
-            <View style={{marginTop: 10}}>
-              <Text style={{fontFamily: 'Poppins-Bold', fontSize: 14}}>
+            <View style={{ marginTop: 10 }}>
+              <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>
                 Part 1
               </Text>
-              <Text style={{fontFamily: 'Poppins-Regular', textAlign: 'auto'}}>
+              <Text style={{ fontFamily: 'Poppins-Regular', textAlign: 'auto' }}>
                 {artikelData.partOne}
               </Text>
             </View>
@@ -213,12 +227,12 @@ const DetailArtikelScreen = (props) => {
             {/* PART TWO */}
 
             {artikelData.partTwo !== '' && (
-              <View style={{marginTop: 10}}>
-                <Text style={{fontFamily: 'Poppins-Bold', fontSize: 14}}>
+              <View style={{ marginTop: 10 }}>
+                <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>
                   Part 2
                 </Text>
                 <Text
-                  style={{fontFamily: 'Poppins-Regular', textAlign: 'auto'}}>
+                  style={{ fontFamily: 'Poppins-Regular', textAlign: 'auto' }}>
                   {artikelData.partTwo}
                 </Text>
               </View>
@@ -227,12 +241,12 @@ const DetailArtikelScreen = (props) => {
             {/* PART THREE */}
 
             {artikelData.partThree !== '' ? (
-              <View style={{marginTop: 10}}>
-                <Text style={{fontFamily: 'Poppins-Bold', fontSize: 14}}>
+              <View style={{ marginTop: 10 }}>
+                <Text style={{ fontFamily: 'Poppins-Bold', fontSize: 14 }}>
                   Part 3
                 </Text>
                 <Text
-                  style={{fontFamily: 'Poppins-Regular', textAlign: 'auto'}}>
+                  style={{ fontFamily: 'Poppins-Regular', textAlign: 'auto' }}>
                   {artikelData.partThree}
                 </Text>
               </View>
@@ -242,9 +256,9 @@ const DetailArtikelScreen = (props) => {
             onLayout={(ev) => {
               setBottomActions(ev.nativeEvent.layout);
             }}
-            style={[styles.bottomActions, {backgroundColor: 'white'}]}
+            style={[styles.bottomActions, { backgroundColor: 'white' }]}
           />
-          <View style={{paddingHorizontal: 14, backgroundColor: 'white'}}>
+          <View style={{ paddingHorizontal: 14, backgroundColor: 'white' }}>
             <Text
               style={{
                 fontSize: 18,
@@ -255,7 +269,7 @@ const DetailArtikelScreen = (props) => {
             <FlatList
               data={artikel.sortArtikels}
               keyExtractor={(item) => `key-load-favorite-${item.id}`}
-              renderItem={({item, index}) => {
+              renderItem={({ item, index }) => {
                 if (item.id === id) {
                   return null;
                 }
@@ -284,7 +298,7 @@ const DetailArtikelScreen = (props) => {
               ],
             },
           ]}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <LikeButtonComponent idArtikel={artikelData.id} />
             <Animated.Text
               style={{
@@ -333,7 +347,7 @@ const DetailArtikelScreen = (props) => {
               </Text>
             </Animated.View>
           </View>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
             <Animated.View
               style={{
                 opacity: scrollY.interpolate({
@@ -358,7 +372,7 @@ const DetailArtikelScreen = (props) => {
                 <Ionicons
                   name="chatbox-ellipses-outline"
                   size={24}
-                  style={{marginRight: 20}}
+                  style={{ marginRight: 20 }}
                 />
               </TouchableOpacity>
             </Animated.View>
@@ -383,7 +397,7 @@ const DetailArtikelScreen = (props) => {
                     },
                   ],
                 }}>
-                <TouchableOpacity onPress={() => alert('Share')}>
+                <TouchableOpacity onPress={() => handleSnapPress(1)}>
                   <Ionicons name="share-social-outline" size={24} />
                 </TouchableOpacity>
               </Animated.View>
@@ -394,12 +408,23 @@ const DetailArtikelScreen = (props) => {
     </View>
   );
 
+  const listViewRender = (iconName, name, onPress) => {
+    return (
+      <TouchableOpacity onPress={() => onPress()}>
+        <View style={{ flexDirection: 'row', marginVertical: 8, alignItems: 'center', paddingVertical: 4 }}>
+          <Ionicons name={iconName} size={20} style={{ marginRight: 8 }} />
+          <Text style={{ fontFamily: 'Poppins-Regular', fontSize: 14 }}>{name}</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
   if (artikel.loading) {
     render = (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
           source={require('../components/Lottie/loading.json')}
-          style={{height: 98}}
+          style={{ height: 98 }}
           autoPlay
           loop
         />
@@ -407,7 +432,77 @@ const DetailArtikelScreen = (props) => {
     );
   }
 
-  return render;
+  // Share Button
+  const shareButton = async () => {
+    try {
+      const result = await Share.share({
+        message: `Artikel tentang ${artikelData.judul} terdapat di Voice of Bayyinah. Ayo download aplikasinya di Google Play`
+      })
+    } catch (err) { }
+  }
+
+  const copyClipboard = () => {
+    Clipboard.setString(`${artikelData.partOne}\n${artikelData.partTwo}\n${artikelData.partThree}`)
+  }
+
+  // RN HTML TO PDF
+  const createPDF = () => {
+
+    const htmlPartOne = artikelData.partOne.replace(/(?:\r\n|\r|\n)/g, '<br>').replace('#', '')
+    const htmlPartTwo = artikelData.partTwo.replace(/(?:\r\n|\r|\n)/g, '<br>').replace('#', '')
+    const htmlPartThree = artikelData.partThree.replace(/(?:\r\n|\r|\n)/g, '<br>').replace('#', '')
+
+    let options = {
+      html: `
+      <h1 style="text-align: center;">${artikelData.judul}</h1>
+      <img src="${artikelData.imageUrl}" height="300" width="100%" style="object-fit:cover;" />
+      <br />
+      <strong>Penulis: ${penulis.displayName}</strong>
+      <p>${htmlPartOne}</p>
+      <p>${htmlPartTwo}</p>
+      <p>${htmlPartThree}</p>
+      `,
+      fileName: `${artikelData.judul}`,
+      directory: 'Documents'
+    }
+
+    RNHtmlPDF.convert(options).then((res) => {
+      const file = res.filePath
+      Alert.alert('Sukses Membuat PDF', `PDF Anda berada di ${file}`, [
+        {
+          'text': 'Buka PDF',
+          onPress: () => {
+            FileViewer.open(file, { showOpenWithDialog: true, showAppsSuggestions: true })
+              .then(() => {
+                console.log('Berhasil')
+              })
+              .catch(err => console.log('Err Open PDF: ', err))
+          },
+          'style': 'default'
+        }, {
+          text: 'Tutup',
+          onPress: () => console.log('User close')
+        }
+      ])
+    }).catch(err => console.log('Error Create PDF: ', err))
+  }
+
+  return (
+    <View>
+      {render}
+      <BottomSheet
+        ref={bottomSheet}
+        index={0}
+        snapPoints={snapPoints}
+        backdropComponent={BottomSheetBackdrop}>
+        <View style={{ paddingHorizontal: 20, paddingVertical: 18 }}>
+          {listViewRender('share-social', 'Bagikan', () => shareButton())}
+          {listViewRender('copy-outline', 'Salin', () => copyClipboard())}
+          {listViewRender('print', 'Simpan Sebagai PDF', () => createPDF())}
+        </View>
+      </BottomSheet>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

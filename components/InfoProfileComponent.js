@@ -3,7 +3,7 @@ import { Dimensions, Image, TouchableOpacity } from 'react-native';
 import { Layout, Text } from '@ui-kitten/components';
 import Icon from 'react-native-vector-icons/Feather';
 
-const InfoProfileComponent = ({ photoAuth, nameAuth, navigation }) => {
+const InfoProfileComponent = ({ photoAuth, nameAuth, navigation, typeUser }) => {
   return (
     <Layout
       style={{
@@ -28,6 +28,7 @@ const InfoProfileComponent = ({ photoAuth, nameAuth, navigation }) => {
             category="label">
             {nameAuth}
           </Text>
+          {typeUser === "1" && <Text style={{fontFamily: 'Poppins-Regular', fontSize: 11, marginTop: 3, color: '#861401'}}>Penulis</Text>}
         </Layout>
       </Layout>
       <TouchableOpacity onPress={() => navigation.navigate('Setting')}>

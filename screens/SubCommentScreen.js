@@ -7,6 +7,7 @@ import {
   FlatList,
   Text,
   ScrollView,
+  Alert
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import LottieView from 'lottie-react-native';
@@ -28,6 +29,21 @@ const SubCommentScreen = (props) => {
   const auth = useSelector((state) => state.auth);
 
   const flatlistRef = useRef()
+
+  const deleteComment = (idParent, idComment) => {
+    Alert.alert('Anda yakin ingin menghapus ?', 'Komen tersebut akan dihapus dan tidak akan ditayangkan kembali.', [
+      {
+        text: 'Ya',
+        style: 'destructive',
+        onPress: () => dispatch(actionComment.deleteSubComment(idParent, idComment))
+      },
+      {
+        text: 'Tidak',
+        style: 'cancel',
+        onPress: () => console.log('User tidak jadi menghapus')
+      }
+    ])
+  }
 
   useEffect(() => {
     dispatch(actionComment.fetchSubComment(id));
@@ -73,7 +89,9 @@ const SubCommentScreen = (props) => {
       renderItem={({ item, index }) => {
         return (
           <CommentItem
+            deleteComment={() => deleteComment(id, item.id)}
             showLike={false}
+            isAdmin={!!(auth.typeUser === "1" || auth.uid === item.uidSender)}
             photoURI={item.imageSender}
             displayName={item.nameSender}
             comment={item.commentSender}

@@ -37,6 +37,7 @@ const HomeScreen = (props) => {
 
   const photoAuth = useSelector((state) => state.auth.image);
   const nameAuth = useSelector((state) => state.auth.name);
+  const typeUser = useSelector((state) => state.auth.typeUser);
   const category = useSelector((state) => state.category);
   const banner = useSelector((state) => state.banner);
   const artikel = useSelector((state) => state.artikel);
@@ -53,14 +54,6 @@ const HomeScreen = (props) => {
   const handleSnapPress = useCallback((index) => {
     bottomSheetRef.current?.snapTo(index);
   }, []);
-
-  const logout = useCallback(async () => {
-    try {
-      await dispatch(authAction.logout());
-    } catch (err) {
-      console.log(err);
-    }
-  });
 
   const insets = useSafeAreaInsets();
 
@@ -112,7 +105,7 @@ const HomeScreen = (props) => {
         backgroundColor: 'white',
       }}>
       <Layout style={{ flex: 1 }}>
-        <InfoProfileComponent nameAuth={nameAuth} photoAuth={photoAuth} navigation={props.navigation} />
+        <InfoProfileComponent nameAuth={nameAuth} photoAuth={photoAuth} navigation={props.navigation} typeUser={typeUser} />
         <SearchHomeComponent navigation={props.navigation} />
         {!banner.loading ? (
           <CarouselHome banner={banner.banners} />

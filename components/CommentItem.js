@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
 import moment from 'moment';
 import 'moment/locale/id';
 moment().locale('id');
@@ -11,7 +11,8 @@ const CommentItem = ({
   comment,
   time,
   press,
-  showLike,
+  isAdmin,
+  deleteComment
 }) => {
   return (
     <View
@@ -21,10 +22,10 @@ const CommentItem = ({
         justifyContent: 'space-between',
         backgroundColor: 'white',
       }}>
-      <View style={{width: '70%', flexDirection: 'row'}}>
+      <View style={{ width: '70%', flexDirection: 'row' }}>
         <Image
-          source={{uri: photoURI}}
-          style={{width: 40, height: 40, borderRadius: 40 / 2, marginRight: 8}}
+          source={{ uri: photoURI }}
+          style={{ width: 40, height: 40, borderRadius: 40 / 2, marginRight: 8 }}
         />
         <View
           style={{
@@ -45,14 +46,14 @@ const CommentItem = ({
                 fontSize: 14,
                 fontFamily: 'Poppins-Bold',
                 marginRight: 6,
-              }}>
+              }} numberOfLines={1}>
               {displayName}
             </Text>
-            <Text style={{fontSize: 12, fontFamily: 'Poppins-Regular'}}>
+            <Text style={{ fontSize: 12, fontFamily: 'Poppins-Regular' }}>
               {comment}
             </Text>
           </View>
-          <View style={{flexDirection: 'row', marginTop: 3}}>
+          <View style={{ flexDirection: 'row', marginTop: 3 }}>
             <Text
               style={{
                 marginRight: 6,
@@ -71,6 +72,16 @@ const CommentItem = ({
                   }}>
                   Balas
                 </Text>
+              </TouchableOpacity>
+            )}
+            {isAdmin && (
+              <TouchableOpacity onPress={deleteComment}>
+                <Text style={{
+                  fontSize: 12,
+                  marginLeft: 6,
+                  fontFamily: 'Poppins-Bold',
+                  color: '#861401',
+                }}>Hapus</Text>
               </TouchableOpacity>
             )}
           </View>

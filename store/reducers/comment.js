@@ -8,6 +8,8 @@ import {
   //
   SUB_COMMENT_FETCH,
   SUB_COMMENT_POST,
+  COMMENT_DELETE,
+  SUB_COMMENT_DELETE,
 } from '../actions/comment';
 
 const initialState = {
@@ -36,6 +38,7 @@ export default (state = initialState, action) => {
         action.payload.image,
         action.payload.name,
         action.payload.comment,
+        action.payload.uid,
         action.payload.time,
       );
       return {
@@ -44,12 +47,23 @@ export default (state = initialState, action) => {
         error: null,
         comments: state.comments.concat(comment),
       };
+    case COMMENT_DELETE:
+      return {
+        ...state,
+        comments: state.comments.filter((comment) => comment.id !== action.id)
+      }
+    case SUB_COMMENT_DELETE:
+      return {
+        ...state,
+        subComments: state.subComments.filter((comment) => comment.id !== action.id)
+      }
     case SUB_COMMENT_POST:
       const subComment = new Comment(
         action.payload.id,
         action.payload.image,
         action.payload.name,
         action.payload.comment,
+        action.payload.uid,
         action.payload.time,
       );
       return {

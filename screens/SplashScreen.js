@@ -17,8 +17,8 @@ const SplashScreen = (props) => {
         dispatch(authAction.setDidTryAL());
       } else {
         const transformedData = JSON.parse(userData);
-        const {uid, email, name, image} = transformedData;
-        dispatch(authAction.authentication(uid, email, name, image));
+        const {uid, email, name, image, typeUser} = transformedData;
+        dispatch(authAction.authentication(uid, email, name, image, typeUser));
       }
     };
     tryLogin();

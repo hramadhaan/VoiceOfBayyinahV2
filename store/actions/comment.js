@@ -14,8 +14,12 @@ export const COMMENT_LIKE = 'COMMENT_LIKE';
 export const COMMENT_UNLIKE = 'COMMENT_UNLIKE';
 export const COMMENT_LIKE_FETCH = 'COMMENT_LIKE_FETCH';
 
+export const COMMENT_DELETE = "COMMENT_DELETE"
+
 export const SUB_COMMENT_FETCH = 'SUB_COMMENT_FETCH';
 export const SUB_COMMENT_POST = 'SUB_COMMENT_POST';
+export const SUB_COMMENT_DELETE = "SUB_COMMENT_DELETE"
+
 
 export const fetchComment = (idArtikel) => {
   return async (dispatch) => {
@@ -39,6 +43,7 @@ export const fetchComment = (idArtikel) => {
               data.user.image,
               data.user.name,
               data.comment,
+              data.user.uid,
               data.time,
             ),
           );
@@ -158,6 +163,7 @@ export const fetchSubComment = (idComment) => {
               data.user.image,
               data.user.name,
               data.comment,
+              data.user.uid,
               data.time,
             ),
           );
@@ -223,3 +229,32 @@ export const unlikeComment = (idComment) => {
       );
   };
 };
+
+export const deleteComment = (idArtikel, idComment) => {
+  return async dispatch => {
+    database().ref('Comment').child(idArtikel).child(idComment).remove().then(() => {
+      database().ref('SubComment').child(idComment).remove()
+      dispatch({
+        type: COMMENT_DELETE,
+        id: idComment
+      })
+    }).catch(err => dispatch({
+      type: COMMENT_ERROR,
+      error: err
+    }))
+  }
+}
+
+export const deleteSubComment = (parentId, idComment) => {
+  return async dispatch => {
+    database().ref('SubComment').child(parentId).child(idComment).remove().then(() => {
+      dispatch({
+        type: SUB_COMMENT_DELETE,
+        id: idComment
+      })
+    }).catch(err => dispatch({
+      type: COMMENT_ERROR,
+      error: err
+    }))
+  }
+}

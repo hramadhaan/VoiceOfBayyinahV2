@@ -22,10 +22,10 @@ export const LOGOUT = 'LOGOUT';
 export const SET_DID_TRY_AL = 'SET_DID_TRY_AL';
 
 export const setDidTryAL = () => {
-  return {type: SET_DID_TRY_AL};
+  return { type: SET_DID_TRY_AL };
 };
 
-const saveDataStorage = (uid, email, name, image) => {
+const saveDataStorage = (uid, email, name, image, typeUser) => {
   AsyncStorage.setItem(
     'userData',
     JSON.stringify({
@@ -33,11 +33,12 @@ const saveDataStorage = (uid, email, name, image) => {
       email,
       name,
       image,
+      typeUser
     }),
   );
 };
 
-export const authentication = (uid, email, name, image) => {
+export const authentication = (uid, email, name, image, typeUser) => {
   return (dispatch) => {
     dispatch({
       type: AUTHENTICATION,
@@ -45,6 +46,7 @@ export const authentication = (uid, email, name, image) => {
       email: email,
       name: name,
       image: image,
+      typeUser: typeUser
     });
   };
 };
@@ -52,41 +54,63 @@ export const authentication = (uid, email, name, image) => {
 export const login = () => {
   return async (dispatch) => {
     try {
-      const {idToken} = await GoogleSignin.signIn();
+      const { idToken } = await GoogleSignin.signIn();
 
       const googleCredential = auth.GoogleAuthProvider.credential(idToken);
 
       await auth()
         .signInWithCredential(googleCredential)
         .then((googleSignIn) => {
-          database()
-            .ref('/User')
-            .child(`${googleSignIn.user.uid}`)
-            .set({
-              uid: googleSignIn.user.uid,
-              email: googleSignIn.user.email,
-              displayName: googleSignIn.user.displayName,
-              photoURL: googleSignIn.user.photoURL,
-            })
-            .then((res) => console.log(res))
-            .catch((err) => {
-              console.log(err);
-            });
+          database().ref('User').child(googleSignIn.user.uid)
+            .once('value').then(snapshot => {
+              if (snapshot.exists()) {
+                // console.log(snapshot.val())
+                const data = snapshot.val()
+                const key = snapshot.key
+                dispatch(
+                  authentication(key, data.email, data.displayName, data.photoURL, data.typeUser)
+                )
+                saveDataStorage(key, data.email, data.displayName, data.photoURL, data.typeUser)
+              } else {
+                // console.log('Tidak Ada')
+                database()
+                  .ref('/User')
+                  .child(`${googleSignIn.user.uid}`)
+                  .set({
+                    uid: googleSignIn.user.uid,
+                    email: googleSignIn.user.email,
+                    displayName: googleSignIn.user.displayName,
+                    photoURL: googleSignIn.user.photoURL,
+                    typeUser: "2"
+                  })
+                  .then((res) => console.log(res))
+                  .catch((err) => {
+                    console.log(err);
+                  });
 
-          dispatch(
-            authentication(
-              googleSignIn.user.uid,
-              googleSignIn.user.email,
-              googleSignIn.user.displayName,
-              googleSignIn.user.photoURL,
-            ),
-          );
-          saveDataStorage(
-            googleSignIn.user.uid,
-            googleSignIn.user.email,
-            googleSignIn.user.displayName,
-            googleSignIn.user.photoURL,
-          );
+                dispatch(
+                  authentication(
+                    googleSignIn.user.uid,
+                    googleSignIn.user.email,
+                    googleSignIn.user.displayName,
+                    googleSignIn.user.photoURL,
+                    "2"
+                  ),
+                );
+                saveDataStorage(
+                  googleSignIn.user.uid,
+                  googleSignIn.user.email,
+                  googleSignIn.user.displayName,
+                  googleSignIn.user.photoURL,
+                  "2"
+                );
+              }
+            })
+
+          // CHECK IF REGISTER
+
+
+
         })
         .catch((err) => {
           console.log(err);

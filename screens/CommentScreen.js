@@ -1,13 +1,14 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   KeyboardAvoidingView,
   FlatList,
   Text,
   Dimensions,
+  Alert,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useDispatch, useSelector } from 'react-redux';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import LottieView from 'lottie-react-native';
 
 import HeaderComponent from '../components/HeaderComponent';
@@ -16,8 +17,8 @@ import * as commentAction from '../store/actions/comment';
 import CommentItem from '../components/CommentItem';
 
 const CommentScreen = (props) => {
-  const {route} = props;
-  const {id} = route.params;
+  const { route } = props;
+  const { id } = route.params;
 
   const insets = useSafeAreaInsets();
 
@@ -26,6 +27,21 @@ const CommentScreen = (props) => {
 
   const dispatch = useDispatch();
   const flatlistRef = useRef();
+
+  const deleteComment = (idArtikel, idComment) => {
+    Alert.alert('Anda yakin ingin menghapus ?', 'Komen tersebut akan dihapus dan tidak akan ditayangkan kembali.', [
+      {
+        text: 'Ya',
+        style: 'destructive',
+        onPress: () => dispatch(commentAction.deleteComment(idArtikel, idComment))
+      },
+      {
+        text: 'Tidak',
+        style: 'cancel',
+        onPress: () => console.log('User tidak jadi menghapus')
+      }
+    ])
+  }
 
   useEffect(() => {
     dispatch(commentAction.fetchComment(id));
@@ -37,20 +53,22 @@ const CommentScreen = (props) => {
         ref={flatlistRef}
         data={comment.comments}
         initialNumToRender={comment.comments.length}
-        style={{marginBottom: 48 + insets.bottom}}
+        style={{ marginBottom: 48 + insets.bottom }}
         keyExtractor={(item, index) => `comment-index-${index}`}
         onContentSizeChange={() => flatlistRef.current.scrollToEnd()} // scroll it
         ItemSeparatorComponent={() => {
-          return <View style={{height: 12}} />;
+          return <View style={{ height: 12 }} />;
         }}
         contentContainerStyle={{
           paddingHorizontal: 12,
           paddingVertical: 8,
         }}
-        renderItem={({item, index}) => {
+        renderItem={({ item, index }) => {
           return (
             <CommentItem
               showLike={true}
+              deleteComment={() => deleteComment(id, item.id)}
+              isAdmin={!!(auth.typeUser === "1" || auth.uid === item.uidSender)}
               photoURI={item.imageSender}
               displayName={item.nameSender}
               comment={item.commentSender}
@@ -70,7 +88,7 @@ const CommentScreen = (props) => {
 
   if (auth.loading || comment.loading) {
     render = (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
           style={{
             height: 90,
@@ -85,15 +103,15 @@ const CommentScreen = (props) => {
 
   if (comment.comments.length === 0) {
     render = (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <LottieView
           source={require('../components/Lottie/empty.json')}
           autoPlay
           loop
-          style={{height: 120}}
+          style={{ height: 120 }}
         />
         <Text
-          style={{fontSize: 14, fontFamily: 'Poppins-Regular', marginTop: 8}}>
+          style={{ fontSize: 14, fontFamily: 'Poppins-Regular', marginTop: 8 }}>
           Tidak ada komentar di artikel ini
         </Text>
       </View>
@@ -101,12 +119,12 @@ const CommentScreen = (props) => {
   }
 
   return (
-    <View style={{flex: 1, backgroundColor: 'white'}}>
+    <View style={{ flex: 1, backgroundColor: 'white' }}>
       <HeaderComponent back navigation={props.navigation} title="Comment" />
       {render}
       <KeyboardAvoidingView
         behavior="position"
-        style={{position: 'absolute', bottom: 0, left: 0, right: 0}}>
+        style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
         <InputComment imageUri={auth.image} id={id} />
       </KeyboardAvoidingView>
     </View>
