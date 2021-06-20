@@ -14,14 +14,14 @@ export const fetchCategory = () => {
       .ref('Category')
       .once('value')
       .then((result) => {
-        const categories = result.val();
-        const loadedCategory = [];
+        const loadedCategory = []
 
-        for (const key in categories) {
-          loadedCategory.push(
-            new Category(key, categories[key].name, categories[key].image),
-          );
-        }
+        result.forEach((snapshot, index) => {
+          const key = snapshot.key
+          const data = snapshot.val()
+
+          loadedCategory.push(new Category(key, data.name, data.image))
+        })
 
         dispatch({
           type: CATEGORY_FETCH,

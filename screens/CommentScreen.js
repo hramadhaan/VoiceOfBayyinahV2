@@ -102,7 +102,7 @@ const CommentScreen = (props) => {
 
   return (
     <View style={{flex: 1, backgroundColor: 'white'}}>
-      <HeaderComponent navigation={props.navigation} title="Comment" />
+      <HeaderComponent back navigation={props.navigation} title="Comment" />
       {render}
       <KeyboardAvoidingView
         behavior="position"

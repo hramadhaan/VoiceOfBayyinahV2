@@ -18,7 +18,7 @@ const PopulerArticleScreen = props => {
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <HeaderComponent title='Populer' navigation={props.navigation} search />
+            <HeaderComponent back title='Populer' navigation={props.navigation} search />
             {artikel.loading ? <LottieView
                 style={{
                     height: 120,

@@ -69,7 +69,7 @@ const SettingScreen = props => {
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
-            <HeaderComponent navigation={props.navigation} title='Pengaturan' />
+            <HeaderComponent back navigation={props.navigation} title='Pengaturan' />
             <View style={{}}>
                 {listViewRender('info', 'Tentang Kami', () => {
                     setShowModal(true)

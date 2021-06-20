@@ -106,7 +106,7 @@ const SubCommentScreen = (props) => {
         flex: 1,
         backgroundColor: 'white',
       }}>
-      <HeaderComponent navigation={props.navigation} title="Comment" />
+      <HeaderComponent back navigation={props.navigation} title="Comment" />
       <View
         style={{
           paddingHorizontal: 12,
